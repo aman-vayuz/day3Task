@@ -17,6 +17,9 @@ class _ChatScreenState extends State<ChatScreen> {
   final msgTxtController = TextEditingController();
   final scrollController = ScrollController();
   DateTime time = DateTime.now();
+  int initialChatFetch = 20;
+
+  var totalLength;
 
   @override
   void initState() {
@@ -25,27 +28,20 @@ class _ChatScreenState extends State<ChatScreen> {
     initChat();
     scrollController.addListener(() {
       if (scrollController.position.userScrollDirection == ScrollDirection.forward &&
-          scrollController.position.pixels > 0) {
+          scrollController.position.pixels > 0 ) {
         print('At the top of the list');
-        fetchMoreData(chatProvider!.allChat.length, 10);
+        totalLength = totalLength-initialChatFetch;
+        fetchMoreData(initialChatFetch, totalLength);
       }
     }); }
 
-
-  int initialChatFetch = 20;
-
   Future<void> initChat() async {
     await chatProvider?.initialise();
-    int? totalLength = await chatProvider?.getLength();
+     totalLength = await chatProvider?.getLength();
     totalLength = (totalLength! - initialChatFetch);
     chatProvider?.fetchChat(initialChatFetch, totalLength);
   }
 
-  // Future<void>fetchDataRefresh ()async{
-  //   int? totalLength = await chatProvider?.getLength();
-  //   totalLength = (totalLength! - initialChatFetch);
-  //   chatProvider?.fetchChat(initialChatFetch, 30);
-  // }
 
 
   void fetchMoreData(int limit , int offSet) {

@@ -75,7 +75,7 @@ class ChatProvider extends ChangeNotifier {
 
   Future<void> fetchChat(int limit, int  offSet) async {
     final fetchedNote = await isar.chatMessages.where().offset(offSet).limit(limit).findAll();
-    // allChat.clear();
+    allChat.clear();
     allChat.addAll(fetchedNote);
     notifyListeners();
   }
